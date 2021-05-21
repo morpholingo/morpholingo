@@ -222,7 +222,9 @@ def main(argv):
             # go get them with async GET requests + async writes
             async_fetch_files(args.TARGETDIR, url_list)
         except Exception as e:
-            sys.stderr.write(f"Failed attempt to pull randomized data with error: {e}\n")
+            sys.stderr.write(
+                f"Failed attempt to pull randomized data with error: {e}\n"
+            )
             sys.exit(1)
 
     console.print(
