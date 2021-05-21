@@ -2,6 +2,7 @@
 
 import argparse
 import asyncio
+import math
 import os.path
 import sys
 from typing import NamedTuple, Optional, Text
@@ -147,6 +148,26 @@ def generate_content_url_list(lang, random_article_id_dict):
     return url_list
 
 
+def chunk(total, chunksize):
+    # if the chunk size exceeds total request
+    # return the total request size as this
+    # is an appropriate chunk
+    if chunksize > total:
+        return [total]
+
+    # otherwise establish number of chunksize
+    # chunks for requests
+    factor = math.floor(total / chunksize)
+    modulo = total % chunksize
+    product = factor * chunksize
+    # add `factor` number of chunks
+    chunk_list = [f"{chunksize}"] * factor
+    if modulo > 0:
+        chunk_list.append(f"{total - product}")
+
+    return chunk_list
+
+
 class AIOError(Exception):
     pass
 
@@ -173,24 +194,40 @@ def main(argv):
         spinner="dots10",
     ):
         try:
-            random_list = get_random_wikipedia_article_ids_by_lang(
-                args.LANG, args.NUMBER
-            )
+            random_list = []
+            # maximum number of random article requests defined by
+            # the wikipedia API
+            wikipedia_max = 500
+            # chunk requests @ maximum allowed random article requests
+            # by the wikipedia API
+            chunked_article_numbers = chunk(int(args.NUMBER), wikipedia_max)
+            if len(chunked_article_numbers) > 1:
+                console.print(
+                    f"Chunking random article requests @ API max: "
+                    f"{chunked_article_numbers}"
+                )
+            for chunk_number in chunked_article_numbers:
+                random_list.extend(
+                    get_random_wikipedia_article_ids_by_lang(args.LANG, chunk_number)
+                )
+
+            # collect random articles with unique API id's into a dictionary
             article_dict = {}
             for item in random_list:
                 article_dict[item["id"]] = {"title": item["title"]}
 
+            # prep GET request URLs (including API params)
             url_list = generate_content_url_list(args.LANG, article_dict)
 
+            # go get them with async GET requests + async writes
             async_fetch_files(args.TARGETDIR, url_list)
         except Exception as e:
-            sys.stderr.write(
-                f"Failed attempt to pull randomized data with error: {e}\n"
-            )
+            sys.stderr.write(f"Failed attempt to pull randomized data with error: {e}\n")
             sys.exit(1)
 
     console.print(
-        f"Pulled articles from `{args.LANG}` Wikipedia to directory path ==> [blue underline]{args.TARGETDIR}[/blue underline]"
+        f"Pulled articles from `{args.LANG}` Wikipedia to directory path ==> "
+        f"[blue underline]{args.TARGETDIR}[/blue underline]"
     )
     console.log("End Collection")
 
