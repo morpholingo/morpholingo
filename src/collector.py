@@ -117,8 +117,12 @@ def get_random_wikipedia_article_ids_by_lang(lang, request_number):
     }
 
     res = requests.get(wiki_api_url, params_randomizer)
-    json_res_random = res.json()
-    return json_res_random["query"]["random"]
+    if res.status_code == 200:
+        json_res_random = res.json()
+        return json_res_random["query"]["random"]
+    else:
+        sys.stderr.write(f"Failed with HTTP status code: {res.status_code}\n")
+        sys.exit(1)
 
 
 def generate_content_url_list(lang, random_article_id_dict):
@@ -154,14 +158,18 @@ def main(argv):
     with console.status(
         f"Pulling {article_number} files from `{lang}` Wikipedia...", spinner="dots10"
     ):
-        random_list = get_random_wikipedia_article_ids_by_lang(lang, article_number)
-        article_dict = {}
-        for item in random_list:
-            article_dict[item["id"]] = {"title": item["title"]}
+        try:
+            random_list = get_random_wikipedia_article_ids_by_lang(lang, article_number)
+            article_dict = {}
+            for item in random_list:
+                article_dict[item["id"]] = {"title": item["title"]}
 
-        url_list = generate_content_url_list(lang, article_dict)
+            url_list = generate_content_url_list(lang, article_dict)
 
-        async_fetch_files("tmp", url_list)
+            async_fetch_files("tmp", url_list)
+        except Exception as e:
+            sys.stderr.write(f"Failed attempt to pull randomized data with error: {e}\n")
+            sys.exit(1)
 
     console.log("End Collection")
 
