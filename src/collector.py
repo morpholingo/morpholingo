@@ -3,13 +3,13 @@
 import asyncio
 import os.path
 import sys
-from typing import NamedTuple, Optional, Text
 import urllib.parse
+from typing import NamedTuple, Optional, Text
 
 import aiofiles
 import aiohttp
 import requests
-import rich
+from rich.console import Console
 
 
 class FWRes(NamedTuple):
@@ -149,13 +149,22 @@ def main(argv):
     lang = argv[0]
     article_number = argv[1]
 
-    random_list = get_random_wikipedia_article_ids_by_lang(lang, article_number)
-    article_dict = {}
-    for item in random_list:
-        article_dict[item["id"]] = {"title": item["title"]}
+    console = Console()
 
-    url_list = generate_content_url_list(lang, article_dict)
-    async_fetch_files("tmp", url_list)
+    console.log("Start Collection")
+    with console.status(
+        f"Pulling {article_number} files from `{lang}` Wikipedia...", spinner="dots10"
+    ):
+        random_list = get_random_wikipedia_article_ids_by_lang(lang, article_number)
+        article_dict = {}
+        for item in random_list:
+            article_dict[item["id"]] = {"title": item["title"]}
+
+        url_list = generate_content_url_list(lang, article_dict)
+
+        async_fetch_files("tmp", url_list)
+
+    console.log("End Collection")
 
 
 if __name__ == "__main__":
