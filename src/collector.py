@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import asyncio
 import os.path
 import sys
@@ -9,6 +10,8 @@ import aiofiles
 import aiohttp
 import requests
 from rich.console import Console
+
+from meta import __version__
 
 
 class FWRes(NamedTuple):
@@ -149,28 +152,46 @@ class AIOError(Exception):
 
 
 def main(argv):
-    lang = argv[0]
-    article_number = argv[1]
+
+    # ------------------------------------------
+    # argparse command line argument definitions
+    # ------------------------------------------
+    parser = argparse.ArgumentParser(description="Text data collector")
+    parser.add_argument(
+        "--version", action="version", version=f"collector.py v{__version__}"
+    )
+    parser.add_argument("LANG", help="Wikipedia language tag")
+    parser.add_argument("NUMBER", help="Number of articles")
+    parser.add_argument("TARGETDIR", help="Write directory path")
+    args = parser.parse_args(argv)
 
     console = Console()
 
     console.log("Start Collection")
     with console.status(
-        f"Pulling {article_number} files from `{lang}` Wikipedia...", spinner="dots10"
+        f"Pulling articles from `{args.LANG}` Wikipedia...",
+        spinner="dots10",
     ):
         try:
-            random_list = get_random_wikipedia_article_ids_by_lang(lang, article_number)
+            random_list = get_random_wikipedia_article_ids_by_lang(
+                args.LANG, args.NUMBER
+            )
             article_dict = {}
             for item in random_list:
                 article_dict[item["id"]] = {"title": item["title"]}
 
-            url_list = generate_content_url_list(lang, article_dict)
+            url_list = generate_content_url_list(args.LANG, article_dict)
 
-            async_fetch_files("tmp", url_list)
+            async_fetch_files(args.TARGETDIR, url_list)
         except Exception as e:
-            sys.stderr.write(f"Failed attempt to pull randomized data with error: {e}\n")
+            sys.stderr.write(
+                f"Failed attempt to pull randomized data with error: {e}\n"
+            )
             sys.exit(1)
 
+    console.print(
+        f"Pulled articles from `{args.LANG}` Wikipedia to directory path ==> [blue underline]{args.TARGETDIR}[/blue underline]"
+    )
     console.log("End Collection")
 
 
