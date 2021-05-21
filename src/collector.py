@@ -3,7 +3,6 @@
 import asyncio
 import os.path
 import sys
-import urllib.parse
 from typing import NamedTuple, Optional, Text
 
 import aiofiles
