@@ -2,6 +2,8 @@ aiodns
 aiohttp
 aiofiles
 beautifulsoup4
+ipykernel
 nltk
+notebook
 requests
 rich
