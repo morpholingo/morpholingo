@@ -9,5 +9,8 @@ format-import:
 	isort src
 
 
+install-ipykernel:
+	python -m ipykernel install --name=morpholingo
+
 
 .PHONY: all
