@@ -15,7 +15,7 @@ from rich.console import Console
 from meta import __version__
 
 
-class FWRes(NamedTuple):
+class MLRes(NamedTuple):
     url: Text
     params: dict[str, str]
     filepath: Optional[Text]
@@ -63,7 +63,7 @@ async def async_fetch_and_write(session, url, dirpath):
         await async_write_text(filepath, text)
         write_success = True
 
-    return FWRes(
+    return MLRes(
         url=url,
         params=params,
         filepath=filepath,
