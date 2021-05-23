@@ -3,6 +3,7 @@
 import argparse
 import asyncio
 import math
+import os
 import os.path
 import sys
 from typing import NamedTuple, Optional, Text
@@ -230,6 +231,13 @@ def main(argv):
     console.print(
         f"Pulled articles from `{args.LANG}` Wikipedia to directory path ==> "
         f"[blue underline]{args.TARGETDIR}[/blue underline]"
+    )
+    json_file_count = len(
+        [name for name in os.listdir(args.TARGETDIR) if name.endswith(".json")]
+    )
+    console.print(
+        f"Total JSON files in [blue underline]{args.TARGETDIR}[/blue underline] ==> "
+        f"{json_file_count}"
     )
     console.log("End Collection")
 
