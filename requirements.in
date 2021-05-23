@@ -3,7 +3,10 @@ aiohttp
 aiofiles
 beautifulsoup4
 ipykernel
+matplotlib
 nltk
 notebook
+numpy
 requests
 rich
+scipy
