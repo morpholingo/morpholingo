@@ -3,6 +3,7 @@ aiohttp
 aiofiles
 beautifulsoup4
 ipykernel
+lxml
 matplotlib
 nltk
 notebook
