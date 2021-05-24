@@ -46,7 +46,7 @@ async def async_fetch(session, url):
 
 async def async_write_text(path, text):
     """Asynchronous IO writes of text data `text` to disk on the file path `path`"""
-    async with aiofiles.open(path, "w") as f:
+    async with aiofiles.open(path, "w", encoding="utf-8") as f:
         await f.write(text)
 
 
