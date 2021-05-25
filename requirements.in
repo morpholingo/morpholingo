@@ -8,6 +8,7 @@ matplotlib
 nltk
 notebook
 numpy
+pandas
 requests
 rich
 scipy
