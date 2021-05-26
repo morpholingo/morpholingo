@@ -132,6 +132,7 @@ dmypy.json
 .vscode
 
 # project-specific
+data/
 tmp/
 a/
 b/
