@@ -53,7 +53,7 @@ def is_exclusion_empty_content(parsed_p_tag_content):
 def is_exclusion_content_size(parsed_p_tag_content):
     """Exclude articles below a content size threshold.
     Defined at the 25th percentile of English article sizes."""
-    if utf8len(clean_wikipedia(parsed_p_tag_content)) < 275:
+    if utf8len(clean_wikipedia(parsed_p_tag_content)) < 579:
         return True
     else:
         return False
@@ -110,9 +110,7 @@ async def remove_files(filepaths, lang_tag):
             f"Removed {below_content_size_count} articles below content "
             f"size criterion"
         )
-    removed_file_count = (
-        stub_file_count + empty_content_count + below_content_size_count
-    )
+    removed_file_count = stub_file_count + empty_content_count + below_content_size_count
     return removed_file_count
 
 
