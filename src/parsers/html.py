@@ -11,6 +11,6 @@ def parse_html_p_content(html_text):
     soup = BeautifulSoup(html_text, "lxml")
     contents = soup.find_all("p")
     if len(contents) > 0:
-        return "\n".join(contents)
+        return "\n".join([p.text for p in contents])
     else:
         return None
