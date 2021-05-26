@@ -12,6 +12,9 @@ from bs4 import BeautifulSoup
 from rich.console import Console
 
 from meta import __version__
+from parsers.html import parse_html_p_content
+from preprocessing.cleaners import clean_wikipedia
+from utils.strutils import utf8len
 
 # tuple of localized `title` attribute defintions in Wikipedia stub
 # article HTML `a href` tags
@@ -32,10 +35,8 @@ async def async_read(filepath):
 # ==================
 
 
-async def is_exclusion_stub(json_text, lang_tag):
+async def is_exclusion_stub(html_text, lang_tag):
     if lang_tag in WIKI_STUB_TITLES:
-        json_obj = json.loads(json_text)
-        html_text = json_obj["parse"]["text"]
         soup = BeautifulSoup(html_text, "lxml")
         stub_title = WIKI_STUB_TITLES[lang_tag]
         # if we identify the stub HTML tag, it is a stub
@@ -45,11 +46,14 @@ async def is_exclusion_stub(json_text, lang_tag):
     return False
 
 
-async def is_exclusion_empty_content(json_text):
-    json_obj = json.loads(json_text)
-    html_text = json_obj["parse"]["text"]
-    soup = BeautifulSoup(html_text, "lxml")
-    if len(soup.find_all("p")) == 0:
+def is_exclusion_empty_content(parsed_p_tag_content):
+    return parsed_p_tag_content is None
+
+
+def is_exclusion_content_size(parsed_p_tag_content):
+    """Exclude articles below a content size threshold.
+    Defined at the 25th percentile of English article sizes."""
+    if utf8len(clean_wikipedia(parsed_p_tag_content)) < 275:
         return True
     else:
         return False
@@ -70,22 +74,45 @@ async def remove_files(filepaths, lang_tag):
     remove_path_list = []
     stub_file_count = 0
     empty_content_count = 0
+    below_content_size_count = 0
 
     for filepath in filepaths:
         json_text = await async_read(filepath)
+        json_obj = json.loads(json_text)
+        html_text = json_obj["parse"]["text"]
         # exclusion criterion: Is a stub file
-        if await is_exclusion_stub(json_text, lang_tag):
+        if await is_exclusion_stub(html_text, lang_tag):
             remove_path_list.append(filepath)
             stub_file_count += 1
-        elif await is_exclusion_empty_content(json_text):
-            remove_path_list.append(filepath)
-            empty_content_count += 1
+        else:
+            parsed_p_tag_content = parse_html_p_content(html_text)
+            if is_exclusion_empty_content(parsed_p_tag_content):
+                remove_path_list.append(filepath)
+                empty_content_count += 1
+            # the above check confirms that the parsed <p> tag content
+            # response is not None.  Keep this check below (also because
+            # this is likely slower)
+            elif is_exclusion_content_size(parsed_p_tag_content):
+                remove_path_list.append(filepath)
+                below_content_size_count += 1
 
     # remove files that meet exclusion criteria
     for remove_filepath in remove_path_list:
         await remove_file(remove_filepath)
 
-    removed_file_count = stub_file_count + empty_content_count
+    # report number of articles that met exclusion criteria
+    if stub_file_count > 0:
+        print(f"Removed {stub_file_count} stub articles")
+    if empty_content_count > 0:
+        print(f"Removed {empty_content_count} empty content articles")
+    if below_content_size_count > 0:
+        print(
+            f"Removed {below_content_size_count} articles below content "
+            f"size criterion"
+        )
+    removed_file_count = (
+        stub_file_count + empty_content_count + below_content_size_count
+    )
     return removed_file_count
 
 
