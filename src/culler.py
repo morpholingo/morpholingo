@@ -77,8 +77,7 @@ async def remove_files(filepaths, lang_tag):
         if await is_exclusion_stub(json_text, lang_tag):
             remove_path_list.append(filepath)
             stub_file_count += 1
-
-        if await is_exclusion_empty_content(json_text):
+        elif await is_exclusion_empty_content(json_text):
             remove_path_list.append(filepath)
             empty_content_count += 1
 
