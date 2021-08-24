@@ -58,13 +58,13 @@ ipykernel==5.5.5
     # via
     #   -r requirements.in
     #   notebook
+ipython==7.23.1
+    # via ipykernel
 ipython-genutils==0.2.0
     # via
     #   nbformat
     #   notebook
     #   traitlets
-ipython==7.23.1
-    # via ipykernel
 jedi==0.18.0
     # via ipython
 jinja2==3.0.1
@@ -94,10 +94,10 @@ lxml==4.6.3
     # via -r requirements.in
 markupsafe==2.0.1
     # via jinja2
-matplotlib-inline==0.1.2
-    # via ipython
 matplotlib==3.4.2
     # via -r requirements.in
+matplotlib-inline==0.1.2
+    # via ipython
 mistune==0.8.4
     # via nbconvert
 multidict==5.1.0
@@ -117,7 +117,7 @@ nest-asyncio==1.5.1
     # via nbclient
 nltk==3.6.2
     # via -r requirements.in
-notebook==6.4.0
+notebook==6.4.1
     # via -r requirements.in
 numpy==1.20.3
     # via
