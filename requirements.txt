@@ -180,7 +180,7 @@ requests==2.25.1
     # via -r requirements.in
 rich==10.2.2
     # via -r requirements.in
-scipy==1.6.3
+scipy==1.10.0
     # via -r requirements.in
 send2trash==1.5.0
     # via notebook
