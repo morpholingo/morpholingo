@@ -26,7 +26,7 @@ beautifulsoup4==4.9.3
     # via -r requirements.in
 bleach==3.3.0
     # via nbconvert
-certifi==2020.12.5
+certifi==2023.7.22
     # via requests
 cffi==1.14.5
     # via
