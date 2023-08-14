@@ -197,7 +197,7 @@ terminado==0.10.0
     # via notebook
 testpath==0.5.0
     # via nbconvert
-tornado==6.1
+tornado==6.3.2
     # via
     #   ipykernel
     #   jupyter-client
