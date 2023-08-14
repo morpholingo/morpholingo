@@ -8,13 +8,15 @@ aiodns==3.0.0
     # via -r requirements.in
 aiofiles==0.7.0
     # via -r requirements.in
-aiohttp==3.7.4.post0
+aiohttp==3.8.5
     # via -r requirements.in
+aiosignal==1.3.1
+    # via aiohttp
 argon2-cffi==20.1.0
     # via notebook
 async-generator==1.10
     # via nbclient
-async-timeout==3.0.1
+async-timeout==4.0.3
     # via aiohttp
 attrs==21.2.0
     # via
@@ -33,9 +35,9 @@ cffi==1.14.5
     #   argon2-cffi
     #   pycares
 chardet==4.0.0
-    # via
-    #   aiohttp
-    #   requests
+    # via requests
+charset-normalizer==3.2.0
+    # via aiohttp
 click==8.0.1
     # via nltk
 colorama==0.4.4
@@ -50,6 +52,10 @@ defusedxml==0.7.1
     # via nbconvert
 entrypoints==0.3
     # via nbconvert
+frozenlist==1.4.0
+    # via
+    #   aiohttp
+    #   aiosignal
 idna==2.10
     # via
     #   requests
@@ -216,8 +222,6 @@ traitlets==5.0.5
     #   nbconvert
     #   nbformat
     #   notebook
-typing-extensions==3.10.0.0
-    # via aiohttp
 urllib3==1.26.5
     # via requests
 wcwidth==0.2.5
