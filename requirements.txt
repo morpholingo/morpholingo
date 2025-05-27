@@ -151,7 +151,7 @@ pycares==4.0.0
     # via aiodns
 pycparser==2.20
     # via cffi
-pygments==2.9.0
+pygments==2.15.0
     # via
     #   ipython
     #   jupyterlab-pygments
