@@ -12,6 +12,8 @@ aiohttp==3.7.4.post0
     # via -r requirements.in
 argon2-cffi==20.1.0
     # via notebook
+asttokens==3.0.0
+    # via stack-data
 async-generator==1.10
     # via nbclient
 async-timeout==3.0.1
@@ -50,6 +52,8 @@ defusedxml==0.7.1
     # via nbconvert
 entrypoints==0.3
     # via nbconvert
+executing==2.2.0
+    # via stack-data
 idna==2.10
     # via
     #   requests
@@ -58,7 +62,7 @@ ipykernel==5.5.5
     # via
     #   -r requirements.in
     #   notebook
-ipython==7.23.1
+ipython==8.10.0
     # via ipykernel
 ipython-genutils==0.2.0
     # via
@@ -141,12 +145,14 @@ pillow==8.3.2
     # via matplotlib
 prometheus-client==0.10.1
     # via notebook
-prompt-toolkit==3.0.18
+prompt-toolkit==3.0.51
     # via ipython
 ptyprocess==0.7.0
     # via
     #   pexpect
     #   terminado
+pure-eval==0.2.3
+    # via stack-data
 pycares==4.9.0
     # via aiodns
 pycparser==2.20
@@ -193,6 +199,8 @@ six==1.16.0
     #   python-dateutil
 soupsieve==2.2.1
     # via beautifulsoup4
+stack-data==0.6.3
+    # via ipython
 terminado==0.10.0
     # via notebook
 testpath==0.5.0
