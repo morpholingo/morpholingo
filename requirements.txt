@@ -129,7 +129,7 @@ nltk==3.9
     # via -r requirements.in
 notebook==6.4.1
     # via -r requirements.in
-numpy==1.20.3
+numpy==1.22.0
     # via
     #   -r requirements.in
     #   matplotlib
